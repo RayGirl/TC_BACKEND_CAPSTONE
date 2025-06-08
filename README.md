@@ -37,7 +37,7 @@ A RESTful API built with Node.js, Express, and MongoDB to support *FashionTube*,
 ├── models/            # Mongoose schemas
 ├── routes/            # API endpoints
 ├── middlewares/       # Auth & error handling
-|── services           # Email seervice
+|── services           # Email service
 ├── server.js          # App entry point
 ├── .env               # Environment variables
 ```
