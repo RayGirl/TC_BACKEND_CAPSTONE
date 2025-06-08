@@ -46,7 +46,7 @@ A RESTful API built with Node.js, Express, and MongoDB to support *FashionTube*,
 
  *Setup Instructions*
 
-1. Clone the repository  
+1. Clone the repository: https://github.com/RayGirl/TC_BACKEND_CAPSTONE
 2. Install dependencies:
    ```bash
    npm install
@@ -79,7 +79,7 @@ A RESTful API built with Node.js, Express, and MongoDB to support *FashionTube*,
 
 ---
 
- *Contributing*
+ *Contributors*
 
 We welcome contributions from all developers!  
 Here’s how to get started:
@@ -97,6 +97,12 @@ Please ensure your code is clean and well-commented before submitting.
 
 ---
 
- *License*
+This project is This project is developed and maintained by:
 
-This project is open-source and available under the *MIT License*.
+   Mutmainah Raymond: 
+   Victoria O. Akinwumi: victoriaoakinwumi@gmail.com
+   Owolabi Samuel: samuelsnofts@gmail.com
+   Wambua Mutuku: mutukuwambua400@gmail.com
+   Sosanya Oluwadamisi Emmanuel: damisiemma@gmail.com
+   Wasiu Soliu: wasiusoliu@gmail.com
+   Olatunde Israel: 
