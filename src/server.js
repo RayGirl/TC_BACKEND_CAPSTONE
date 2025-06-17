@@ -8,7 +8,7 @@ import connectDB from './config/database.js';
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './config/swagger.js';
 import authRoutes from './routes/authRoutes.js';
-// import courseRoutes from './routes/courseRoutes.js';
+import courseRoutes from './routes/courseRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
 import path from 'path';
 //import externalApiRoutes from './routes/externalApiRoutes.js';
@@ -35,7 +35,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true })
 
 // Routes
 app.use('/api/auth', authRoutes);
-// app.use('/api/courses', courseRoutes);
+app.use('/api/courses', courseRoutes);
 
 app.use('/api/upload', uploadRoutes);
 

@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 const courseSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
@@ -22,3 +24,8 @@ const courseSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+
+const course = mongoose.model("course", courseSchema);
+
+export default courseSchema;
