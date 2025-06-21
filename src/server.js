@@ -17,7 +17,7 @@ import path from 'path';
 
 
 //Connect to MongoDB
-connectDB();
+//connectDB();
 
 // Create Express app
 const app = express();
@@ -55,8 +55,8 @@ app.use((req, res) => {
 });
 
 //MongoDB Connection
-// mongoose.connect(process.env.MONGO_URI)
-//   .then(() => console.log('MongoDB connected'))
+ //mongoose.connect(process.env.MONGO_URI)
+  //.then(() => console.log('MongoDB connected'))
 //   .catch(err => console.error(err));
 
 // Start server
