@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const courseSchema = new mongoose.Schema(
   {
@@ -8,24 +8,23 @@ const courseSchema = new mongoose.Schema(
       {
         title: String,
         url: { type: String, required: true },
-        duration: String
-      }
+        duration: String,
+      },
     ],
     materials: [
       {
         title: String,
-        fileUrl: { type: String, required: true } // URL to the PDF file
-      }
+        fileUrl: { type: String, required: true },
+      },
     ],
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    }
+      ref: "User",
+    },
   },
   { timestamps: true }
 );
 
+const Course = mongoose.model("course", courseSchema);
 
-const course = mongoose.model("course", courseSchema);
-
-export default courseSchema;
+export default Course;
