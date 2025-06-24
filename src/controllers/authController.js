@@ -1,44 +1,43 @@
-import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
-import bcrypt from 'bcryptjs';
-import User from '../models/User.js';
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import bcrypt from "bcryptjs";
+import User from "../models/User.js";
 //import { sendResetPasswordEmail } from '../services/emailService.js';
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRATION
-  });	
+    expiresIn: '1h',
+  });
 };
 
 export const register = async (req, res, next) => {
-    const { name, email, password, role } = req.body;
-try {
-    const exists = await
-    User.findOne({email});
-    if (exists)return
-    res.status(400).json({message:'Email already exists'});
+  const { username, email, password, role } = req.body;
+  try {
+    const exists = await User.findOne({ email });
+    if (exists) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationToken = crypto.randomBytes(32).toString("hex");
 
     // Create user
     const user = await User.create({
-      name,
+      username,
       email,
-      password: hashedPassword,
+      password,
       verificationToken,
-      role: role || 'user' // Default to 'user' if no role specified
+      role: role || "user",
     });
 
     // Generate token
     const token = generateToken(user.id);
 
     res.status(201).json({
-      status: 'success',
+      status: "success",
       data: {
         user,
-        token
-      }
+        token,
+      },
     });
   } catch (error) {
     next(error);
@@ -49,38 +48,45 @@ export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Check if email and password exist
+    console.log(`${email} and ${password}`);
     if (!email || !password) {
       return res.status(400).json({
-        status: 'error',
-        message: 'Please provide email and password'
+        status: "error",
+        message: "Please provide email and password",
       });
     }
 
     // Find user
-    const user = await User.findOne({ where: { email } });
-
-    if (!user || !(await user.comparePassword(password))) {
+    const user = await User.findOne({ email });
+    if (!user) {
       return res.status(401).json({
-        status: 'error',
-        message: 'Incorrect email or password'
+        status: "error",
+        message: "Incorrect email or password",
       });
     }
 
-    // Update last login
+    // Compare password
+    const isMatch = await user.comparePassword(password);
+    console.log("Password match:", isMatch);
+
+    if (!isMatch) {
+      return res.status(401).json({
+        status: "error",
+        message: "Incorrect email or password",
+      });
+    }
+
     user.lastLogin = new Date();
     await user.save();
 
-    // Generate token
     const token = generateToken(user.id);
-    console.log('Verify user using token: ${verificationToken}');
 
     res.json({
-      status: 'success',
+      status: "success",
       data: {
         user,
-        token
-      }
+        token,
+      },
     });
   } catch (error) {
     next(error);
@@ -90,21 +96,21 @@ export const login = async (req, res, next) => {
 export const forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({
-        status: 'error',
-        message: 'No user found with that email'
+        status: "error",
+        message: "No user found with that email",
       });
     }
 
     // Generate reset token
-    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetToken = crypto.randomBytes(32).toString("hex");
     user.resetPasswordToken = crypto
-      .createHash('sha256')
+      .createHash("sha256")
       .update(resetToken)
-      .digest('hex');
+      .digest("hex");
     user.resetPasswordExpires = Date.now() + 30 * 60 * 1000; // 10 minutes
 
     await user.save();
@@ -113,8 +119,8 @@ export const forgotPassword = async (req, res, next) => {
       await sendResetPasswordEmail(user.email, resetToken);
 
       res.json({
-        status: 'success',
-        message: 'Reset token sent to email'
+        status: "success",
+        message: "Reset token sent to email",
       });
     } catch (error) {
       user.resetPasswordToken = null;
@@ -122,8 +128,8 @@ export const forgotPassword = async (req, res, next) => {
       await user.save();
 
       return res.status(500).json({
-        status: 'error',
-        message: 'Error sending email. Please try again later.'
+        status: "error",
+        message: "Error sending email. Please try again later.",
       });
     }
   } catch (error) {
@@ -136,23 +142,20 @@ export const resetPassword = async (req, res, next) => {
     const { token } = req.params;
     const { password } = req.body;
 
-    // Hash token
     const resetPasswordToken = crypto
-      .createHash('sha256')
+      .createHash("sha256")
       .update(token)
-      .digest('hex');
+      .digest("hex");
 
     const user = await User.findOne({
-      where: {
-        resetPasswordToken,
-        resetPasswordExpires: { [Op.gt]: Date.now() }
-      }
+      resetPasswordToken,
+      resetPasswordExpiry: { $gt: Date.now() },
     });
 
     if (!user) {
       return res.status(400).json({
-        status: 'error',
-        message: 'Token is invalid or has expired'
+        status: "error",
+        message: "Token is invalid or has expired",
       });
     }
 
@@ -166,11 +169,11 @@ export const resetPassword = async (req, res, next) => {
     const newToken = generateToken(user.id);
 
     res.json({
-      status: 'success',
+      status: "success",
       data: {
         user,
-        token: newToken
-      }
+        token: newToken,
+      },
     });
   } catch (error) {
     next(error);
@@ -184,8 +187,8 @@ export const changePassword = async (req, res, next) => {
 
     if (!(await user.comparePassword(currentPassword))) {
       return res.status(401).json({
-        status: 'error',
-        message: 'Current password is incorrect'
+        status: "error",
+        message: "Current password is incorrect",
       });
     }
 
@@ -193,8 +196,8 @@ export const changePassword = async (req, res, next) => {
     await user.save();
 
     res.json({
-      status: 'success',
-      message: 'Password updated successfully'
+      status: "success",
+      message: "Password updated successfully",
     });
   } catch (error) {
     next(error);
