@@ -7,4 +7,5 @@ uploads/*
 !uploads/.gitkeep
 npm-debug.log*
 upload/
+.env
 >>>>>>> 9573b49b94fd1d8f7bdb2789b0b7ced6769a5a11
