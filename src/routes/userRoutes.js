@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+  registerUser,
   getAllUsers,
   getSingleUser,
   updateUserProfile,
@@ -15,6 +16,7 @@ const router = express.Router();
 router.use(authorize);
 
 // Regular users
+router.post('/register',registerUser);
 router.get('/me', getSingleUser);
 router.put('/update-profile', updateUserProfile);
 

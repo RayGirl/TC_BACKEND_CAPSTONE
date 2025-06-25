@@ -1,5 +1,22 @@
 import User from '../models/User.js';
 
+// @desc    Register  new user
+// @route   POST /api/users/register
+// @access  Public
+export const registerUser = async (req, res) => {
+  try {
+    const {name, email, password}= req.body;
+    if (!User|| !email || !password) {
+    return res.status(404).json({ message: 'All fields are required' });
+    }
+    res.status(201).json({message: 'User registered successfully', user: {name, email},
+  });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+
 // @desc    Get current user's profile
 // @route   GET /api/users/me
 // @access  Private
