@@ -12,7 +12,7 @@ const options = {
       description: 'API documentation for FashionTube backend',
       contact: {
         name: 'API Support',
-        url: 'http://localhost:'+process.env.PORT+'/api-docs',
+        url: 'http://fashiontube-api.onrender.com:'+process.env.PORT+'/api-docs',
       },
     },
     servers: [
