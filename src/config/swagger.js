@@ -17,8 +17,8 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:'+process.env.PORT+'/api',
-        description: 'Development server',
+        url: 'http://fashiontube-api.onrender.com'+process.env.PORT+'/api',
+        description: 'Production server',
       },
     ],
     components: {

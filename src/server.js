@@ -7,12 +7,14 @@ import cors from 'cors';
 import connectDB from './config/database.js';
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './config/swagger.js';
+import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
+import progressRoutes from './routes/progressRoutes.js';
 import path from 'path';
 //import externalApiRoutes from './routes/externalApiRoutes.js';
-// errorHandler from './middleware/errorHandler.js';
+// import errorHandler from './middleware/errorHandler.js';
 
 
 
@@ -27,17 +29,22 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 // Serve static files from uploads directory
 app.use('/uploads', express.static('uploads'));
 
 // Swagger Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
 
-// Routes
+
+app.get('/',(req, res)=>{
+  res.send("Welcome to FashionTube API");
+});
+app.use('/api/user', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/courses', courseRoutes);
-
 app.use('/api/upload', uploadRoutes);
+app.use('api/progress', progressRoutes);
 
 // Make uploads folder publicly accessible
 app.use('/uploads', express.static(path.join(process.cwd(), '/uploads')));

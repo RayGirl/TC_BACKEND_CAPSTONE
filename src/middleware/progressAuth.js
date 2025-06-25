@@ -1,17 +1,32 @@
-const Progress = require('..models/Progress.js');
-const authorizeProgressAccess = async (req, res, next) => {
-    try{const progress = await Progress.findById(req.params.id);
-        if (!progress) {
-            return res.status(404).json({message: 'Progress not found'});
-        }
-        if (progress.user.toString() !==req.user.id && req.user.role !== 'admin') {
-            return res.status(403).json({ message: 'Not authorized to access this progress data'});
-        }
-        req.progress = progress;
-    next();
-} catch (error) {
-    res.status(500).json({message:'Server error'});
-}
- };
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
- module.exports = authorizeProgressAccess;
+export const authorizeRoles = (...allowedRoles) => {
+  return async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ message: 'No token provided' });
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findById(decoded.id).select('-password');
+
+      if (!user) {
+        return res.status(401).json({ message: 'Unauthorized: User not found' });
+      }
+
+      if (!allowedRoles.includes(user.role)) {
+        return res.status(403).json({ message: 'Forbidden: Insufficient permissions' });
+      }
+
+      req.user = user;
+      next();
+    } catch (err) {
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+  };
+};
