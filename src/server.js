@@ -28,15 +28,6 @@ const app = express();
 // app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-
-// Serve static files from uploads directory
-app.use('/uploads', express.static('uploads'));
-
-// Swagger Documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
-
-
 app.get('/',(req, res)=>{
   res.send("Welcome to FashionTube API");
 });
@@ -60,6 +51,14 @@ app.use((req, res) => {
     message: 'Route not found'
   });
 });
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static('uploads'));
+
+// Swagger Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
+
+
 
 //MongoDB Connection
  //mongoose.connect(process.env.MONGO_URI)
