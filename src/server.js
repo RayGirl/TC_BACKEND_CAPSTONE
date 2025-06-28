@@ -76,7 +76,7 @@ const startServer = async () => {
     // Start listening
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
-      console.log(`Swagger documentation available at http://localhost:${PORT}/api-docs`);
+      console.log(`Swagger documentation available at http://fashiontube-api.onrender.com::${PORT}/api-docs`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);
